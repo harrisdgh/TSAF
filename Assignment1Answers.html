@@ -2387,6 +2387,9 @@ text-align: justify
 <ol type="1">
 <li><p>The time series plot of the log gold price is shown below. Evidentally there is a general increasing trend, but this is clearest from 2000 until sometime around 2012. Thereafter the time series drifts without such a clear direction. Instead there are some prolonged periods (over multiple years) where the price drifts upwards or downwards. There is no sign of a seasonal pattern, and one will not be included in the modelling here.</p>
 <div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(Time[ts], Y[ts], <span class="at">type =</span> <span class="st">&quot;l&quot;</span>, <span class="at">main =</span> <span class="st">&quot;log Gold Price&quot;</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -2401,14 +2404,14 @@ text-align: justify
 <li><ol type="a">
 <li><p>The following shows the linear trend estimation and plot.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Fit linear trend and plot</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>dt<span class="sc">$</span>Y <span class="ot">&lt;-</span> Y</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>dt<span class="sc">$</span>Time <span class="ot">&lt;-</span> Time</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>eq0 <span class="ot">&lt;-</span> <span class="fu">lm</span>(Y <span class="sc">~</span> Time, <span class="at">data =</span> dt[ts, ])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Fit linear trend and plot</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>dt<span class="sc">$</span>Y <span class="ot">&lt;-</span> Y</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>dt<span class="sc">$</span>Time <span class="ot">&lt;-</span> Time</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>eq0 <span class="ot">&lt;-</span> <span class="fu">lm</span>(Y <span class="sc">~</span> Time, <span class="at">data =</span> dt[ts, ])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(Time[ts], Y[ts], <span class="at">pch =</span> <span class="dv">16</span>, <span class="at">cex =</span> <span class="fl">0.5</span>)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(Time[ts], eq0<span class="sc">$</span>fitted, <span class="at">col =</span> <span class="st">&quot;blue&quot;</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(Time[ts], Y[ts], <span class="at">pch =</span> <span class="dv">16</span>, <span class="at">cex =</span> <span class="fl">0.5</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(Time[ts], eq0<span class="sc">$</span>fitted, <span class="at">col =</span> <span class="st">&quot;blue&quot;</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
@@ -2422,29 +2425,29 @@ text-align: justify
 <p>While it’s clear the linear trend provides a first approximation to the upwards trend in the time series, it’s also clear a linear trend misses the way in which the trend changes or disappears around the early 2010’s. The trend is not positive enough prior to the early 2010’s, but too positive thereafter.</p></li>
 <li><p>The following code shows how AR lag length selection can be carried out with a linear trend included. For each lag length <span class="math inline">\(p\)</span> the model is estimated, Ljung-Box autocorrelation test computed, and AICc saved. The choice of lag length <span class="math inline">\(p\)</span> to minimise the AICc is noted, and the <span class="math inline">\(p\)</span>-value of the Ljung-Box autocorrelation test for that choice of lag length checked.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="do">### Set max lag and storage for AIC and Ljung-Box tests</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>pmax <span class="ot">&lt;-</span> <span class="dv">12</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>Stats <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="at">nrow =</span> pmax <span class="sc">+</span> <span class="dv">1</span>, <span class="at">ncol =</span> <span class="dv">3</span>)</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(Stats) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;p&quot;</span>, <span class="st">&quot;AICc&quot;</span>, <span class="st">&quot;LBp&quot;</span>)</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (p <span class="cf">in</span> <span class="dv">0</span><span class="sc">:</span>pmax){</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  ARp <span class="ot">&lt;-</span> <span class="fu">Arima</span>(Y[ts],</span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>               <span class="at">order =</span> <span class="fu">c</span>(p, <span class="dv">0</span>, <span class="dv">0</span>),</span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>               <span class="at">xreg =</span> Time[ts])</span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>  LBp <span class="ot">&lt;-</span> <span class="fu">Box.test</span>(ARp<span class="sc">$</span>residuals,</span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>                  <span class="at">lag =</span> <span class="dv">12</span>,</span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>                  <span class="at">type =</span> <span class="st">&quot;Ljung-Box&quot;</span>,</span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>                  <span class="at">fitdf =</span> p)<span class="sc">$</span>p.value</span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>  Stats[p <span class="sc">+</span> <span class="dv">1</span>, ] <span class="ot">&lt;-</span> <span class="fu">c</span>(p, ARp<span class="sc">$</span>aicc, LBp)</span>
-<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Find lag length that minimises AICc</span></span>
-<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>r <span class="ot">&lt;-</span> <span class="fu">which.min</span>(Stats[, <span class="st">&quot;AICc&quot;</span>])</span>
-<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>p0 <span class="ot">&lt;-</span> Stats[r, <span class="st">&quot;p&quot;</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="do">### Set max lag and storage for AIC and Ljung-Box tests</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>pmax <span class="ot">&lt;-</span> <span class="dv">12</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>Stats <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="at">nrow =</span> pmax <span class="sc">+</span> <span class="dv">1</span>, <span class="at">ncol =</span> <span class="dv">3</span>)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(Stats) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;p&quot;</span>, <span class="st">&quot;AICc&quot;</span>, <span class="st">&quot;LBp&quot;</span>)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (p <span class="cf">in</span> <span class="dv">0</span><span class="sc">:</span>pmax){</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  ARp <span class="ot">&lt;-</span> <span class="fu">Arima</span>(Y[ts],</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>               <span class="at">order =</span> <span class="fu">c</span>(p, <span class="dv">0</span>, <span class="dv">0</span>),</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>               <span class="at">xreg =</span> Time[ts])</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>  LBp <span class="ot">&lt;-</span> <span class="fu">Box.test</span>(ARp<span class="sc">$</span>residuals,</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>                  <span class="at">lag =</span> <span class="dv">12</span>,</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>                  <span class="at">type =</span> <span class="st">&quot;Ljung-Box&quot;</span>,</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>                  <span class="at">fitdf =</span> p)<span class="sc">$</span>p.value</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>  Stats[p <span class="sc">+</span> <span class="dv">1</span>, ] <span class="ot">&lt;-</span> <span class="fu">c</span>(p, ARp<span class="sc">$</span>aicc, LBp)</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Find lag length that minimises AICc</span></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>r <span class="ot">&lt;-</span> <span class="fu">which.min</span>(Stats[, <span class="st">&quot;AICc&quot;</span>])</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>p0 <span class="ot">&lt;-</span> Stats[r, <span class="st">&quot;p&quot;</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>The lag length for the AR model to minimise the AICc is:</p>
 <div class="cell">
@@ -2454,8 +2457,8 @@ text-align: justify
 </div>
 <p>The Ljung-Box test <span class="math inline">\(p\)</span> value is:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Ljung-Box p-value for AR(p0) model</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>LBp <span class="ot">&lt;-</span> Stats[r, <span class="st">&quot;LBp&quot;</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Ljung-Box p-value for AR(p0) model</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>LBp <span class="ot">&lt;-</span> Stats[r, <span class="st">&quot;LBp&quot;</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
@@ -2465,10 +2468,10 @@ text-align: justify
 <p>Since the Ljung-Box <em>p</em>-value for the AICc-selected AR(2) model is not less than 0.05, we can conclude there is no evidence the model is misspecified. The AR(2) model with linear trend will be subsequently used for forecasting.</p>
 <p>The estimation of this model is as follows, with the coefficient estimates shown.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>AR2 <span class="ot">&lt;-</span> <span class="fu">Arima</span>(Y[ts],</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>             <span class="at">order =</span> <span class="fu">c</span>(p0, <span class="dv">0</span>, <span class="dv">0</span>),</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">xreg =</span> Time[ts])</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">coef</span>(AR2))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>AR2 <span class="ot">&lt;-</span> <span class="fu">Arima</span>(Y[ts],</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>             <span class="at">order =</span> <span class="fu">c</span>(p0, <span class="dv">0</span>, <span class="dv">0</span>),</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">xreg =</span> Time[ts])</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">coef</span>(AR2))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>          ar1           ar2     intercept          xreg 
    1.12689596   -0.13871429 -165.09477158    0.08542264 </code></pre>
@@ -2490,23 +2493,23 @@ Y_t &amp;= -165.095 +0.085 \: \text{Time}_t + \widehat{Z}_t \\
 <li><ol type="a">
 <li><p>Choose the trend break point within start of 2010 to end of 2014.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Specify range for possible break dates</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>Break_range <span class="ot">&lt;-</span> dt<span class="sc">$</span>Time[<span class="fu">which</span>(dt<span class="sc">$</span>Time <span class="sc">&gt;=</span> <span class="dv">2010</span> <span class="sc">&amp;</span> dt<span class="sc">$</span>Time <span class="sc">&lt;</span> <span class="dv">2015</span>)]</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Storage for RSS</span></span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>RSS <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="at">nrow =</span> <span class="fu">length</span>(Break_range), <span class="at">ncol =</span> <span class="dv">2</span>)</span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(RSS) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;b&quot;</span>, <span class="st">&quot;RSS&quot;</span>)</span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>RSS[, <span class="st">&quot;b&quot;</span>] <span class="ot">&lt;-</span> Break_range</span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="co"># For each break point, estimate trend equation and store RSS</span></span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (b <span class="cf">in</span> Break_range){</span>
-<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>  dt<span class="sc">$</span>TB_b <span class="ot">&lt;-</span> (dt<span class="sc">$</span>Time <span class="sc">&gt;</span> b) <span class="sc">*</span> (dt<span class="sc">$</span>Time <span class="sc">-</span> b)</span>
-<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>  eq1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(Y <span class="sc">~</span> Time <span class="sc">+</span> TB_b, <span class="at">data =</span> dt[ts, ])</span>
-<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>  RSS[<span class="fu">which</span>(RSS[, <span class="st">&quot;b&quot;</span>] <span class="sc">==</span> b), <span class="st">&quot;RSS&quot;</span>] <span class="ot">&lt;-</span> <span class="fu">sum</span>(eq1<span class="sc">$</span>residuals<span class="sc">^</span><span class="dv">2</span>)</span>
-<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Choose break point b to that minimises RSS</span></span>
-<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>b <span class="ot">&lt;-</span> RSS[<span class="fu">which.min</span>(RSS[, <span class="st">&quot;RSS&quot;</span>]), <span class="st">&quot;b&quot;</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Specify range for possible break dates</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>Break_range <span class="ot">&lt;-</span> dt<span class="sc">$</span>Time[<span class="fu">which</span>(dt<span class="sc">$</span>Time <span class="sc">&gt;=</span> <span class="dv">2010</span> <span class="sc">&amp;</span> dt<span class="sc">$</span>Time <span class="sc">&lt;</span> <span class="dv">2015</span>)]</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Storage for RSS</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>RSS <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="at">nrow =</span> <span class="fu">length</span>(Break_range), <span class="at">ncol =</span> <span class="dv">2</span>)</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(RSS) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;b&quot;</span>, <span class="st">&quot;RSS&quot;</span>)</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>RSS[, <span class="st">&quot;b&quot;</span>] <span class="ot">&lt;-</span> Break_range</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="co"># For each break point, estimate trend equation and store RSS</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (b <span class="cf">in</span> Break_range){</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>  dt<span class="sc">$</span>TB_b <span class="ot">&lt;-</span> (dt<span class="sc">$</span>Time <span class="sc">&gt;</span> b) <span class="sc">*</span> (dt<span class="sc">$</span>Time <span class="sc">-</span> b)</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>  eq1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(Y <span class="sc">~</span> Time <span class="sc">+</span> TB_b, <span class="at">data =</span> dt[ts, ])</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>  RSS[<span class="fu">which</span>(RSS[, <span class="st">&quot;b&quot;</span>] <span class="sc">==</span> b), <span class="st">&quot;RSS&quot;</span>] <span class="ot">&lt;-</span> <span class="fu">sum</span>(eq1<span class="sc">$</span>residuals<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Choose break point b to that minimises RSS</span></span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>b <span class="ot">&lt;-</span> RSS[<span class="fu">which.min</span>(RSS[, <span class="st">&quot;RSS&quot;</span>]), <span class="st">&quot;b&quot;</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
@@ -2515,7 +2518,7 @@ Y_t &amp;= -165.095 +0.085 \: \text{Time}_t + \widehat{Z}_t \\
 </div>
 <p>Since the month and year for each observation are in the dataframe, it is simple to show the month and year corresponding to the estimated breakpoint:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(dt[<span class="fu">which</span>(dt<span class="sc">$</span>Time <span class="sc">==</span> b), <span class="fu">c</span>(<span class="st">&quot;Month&quot;</span>, <span class="st">&quot;Year&quot;</span>)])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(dt[<span class="fu">which</span>(dt<span class="sc">$</span>Time <span class="sc">==</span> b), <span class="fu">c</span>(<span class="st">&quot;Month&quot;</span>, <span class="st">&quot;Year&quot;</span>)])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
@@ -2525,12 +2528,12 @@ Y_t &amp;= -165.095 +0.085 \: \text{Time}_t + \widehat{Z}_t \\
 </div></li>
 <li><p>Fit linear trend with break at estimated time.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>dt<span class="sc">$</span>TB_b <span class="ot">&lt;-</span> (dt<span class="sc">$</span>Time <span class="sc">&gt;</span> b) <span class="sc">*</span> (dt<span class="sc">$</span>Time <span class="sc">-</span> b)</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>eq1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(Y <span class="sc">~</span> Time <span class="sc">+</span> TB_b, <span class="at">data =</span> dt[ts, ])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>dt<span class="sc">$</span>TB_b <span class="ot">&lt;-</span> (dt<span class="sc">$</span>Time <span class="sc">&gt;</span> b) <span class="sc">*</span> (dt<span class="sc">$</span>Time <span class="sc">-</span> b)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>eq1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(Y <span class="sc">~</span> Time <span class="sc">+</span> TB_b, <span class="at">data =</span> dt[ts, ])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(Time[ts], Y[ts], <span class="at">pch =</span> <span class="dv">16</span>, <span class="at">cex =</span> <span class="fl">0.5</span>)</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(Time[ts], eq1<span class="sc">$</span>fitted, <span class="at">col =</span> <span class="st">&quot;red&quot;</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(Time[ts], Y[ts], <span class="at">pch =</span> <span class="dv">16</span>, <span class="at">cex =</span> <span class="fl">0.5</span>)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(Time[ts], eq1<span class="sc">$</span>fitted, <span class="at">col =</span> <span class="st">&quot;red&quot;</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
@@ -2544,27 +2547,27 @@ Y_t &amp;= -165.095 +0.085 \: \text{Time}_t + \widehat{Z}_t \\
 <p>Allowing for a break in the trend in June 2011 results in an estimated trend that visually better captures the general direction of the time series over both halves of the sample.</p></li>
 <li><p>The code for AR order selection is as follows, with the same logic as in question 2.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>X1 <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(dt[, <span class="fu">c</span>(<span class="st">&quot;Time&quot;</span>, <span class="st">&quot;TB_b&quot;</span>)])</span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>pmax <span class="ot">&lt;-</span> <span class="dv">12</span></span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>Stats <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="at">nrow =</span> pmax <span class="sc">+</span> <span class="dv">1</span>, <span class="at">ncol =</span> <span class="dv">3</span>)</span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(Stats) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;p&quot;</span>, <span class="st">&quot;AICc&quot;</span>, <span class="st">&quot;LBp&quot;</span>)</span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (p <span class="cf">in</span> <span class="dv">0</span><span class="sc">:</span>pmax){</span>
-<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>  ARp <span class="ot">&lt;-</span> <span class="fu">Arima</span>(Y[ts],</span>
-<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>               <span class="at">order =</span> <span class="fu">c</span>(p, <span class="dv">0</span>, <span class="dv">0</span>),</span>
-<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>               <span class="at">xreg =</span> X1[ts, ])</span>
-<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>  LBp <span class="ot">&lt;-</span> <span class="fu">Box.test</span>(ARp<span class="sc">$</span>residuals, <span class="at">lag =</span> <span class="dv">12</span>,</span>
-<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>                  <span class="at">type =</span> <span class="st">&quot;Ljung-Box&quot;</span>,</span>
-<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>                  <span class="at">fitdf =</span> p)<span class="sc">$</span>p.value</span>
-<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>  Stats[p <span class="sc">+</span> <span class="dv">1</span>, ] <span class="ot">&lt;-</span> <span class="fu">c</span>(p, ARp<span class="sc">$</span>aicc, LBp)</span>
-<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Find lag length that minimises AICc</span></span>
-<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a>r <span class="ot">&lt;-</span> <span class="fu">which.min</span>(Stats[, <span class="st">&quot;AICc&quot;</span>])</span>
-<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> Stats[r, <span class="st">&quot;p&quot;</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>X1 <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(dt[, <span class="fu">c</span>(<span class="st">&quot;Time&quot;</span>, <span class="st">&quot;TB_b&quot;</span>)])</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>pmax <span class="ot">&lt;-</span> <span class="dv">12</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>Stats <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="at">nrow =</span> pmax <span class="sc">+</span> <span class="dv">1</span>, <span class="at">ncol =</span> <span class="dv">3</span>)</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(Stats) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;p&quot;</span>, <span class="st">&quot;AICc&quot;</span>, <span class="st">&quot;LBp&quot;</span>)</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (p <span class="cf">in</span> <span class="dv">0</span><span class="sc">:</span>pmax){</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>  ARp <span class="ot">&lt;-</span> <span class="fu">Arima</span>(Y[ts],</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>               <span class="at">order =</span> <span class="fu">c</span>(p, <span class="dv">0</span>, <span class="dv">0</span>),</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>               <span class="at">xreg =</span> X1[ts, ])</span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>  LBp <span class="ot">&lt;-</span> <span class="fu">Box.test</span>(ARp<span class="sc">$</span>residuals, <span class="at">lag =</span> <span class="dv">12</span>,</span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>                  <span class="at">type =</span> <span class="st">&quot;Ljung-Box&quot;</span>,</span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>                  <span class="at">fitdf =</span> p)<span class="sc">$</span>p.value</span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>  Stats[p <span class="sc">+</span> <span class="dv">1</span>, ] <span class="ot">&lt;-</span> <span class="fu">c</span>(p, ARp<span class="sc">$</span>aicc, LBp)</span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Find lag length that minimises AICc</span></span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a>r <span class="ot">&lt;-</span> <span class="fu">which.min</span>(Stats[, <span class="st">&quot;AICc&quot;</span>])</span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> Stats[r, <span class="st">&quot;p&quot;</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>The selected lag length for the AR model with trend and break is:</p>
 <div class="cell">
@@ -2573,8 +2576,8 @@ Y_t &amp;= -165.095 +0.085 \: \text{Time}_t + \widehat{Z}_t \\
 </div>
 </div>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Ljung-Box p-value for AR(p1) model</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>LBp <span class="ot">&lt;-</span> Stats[r, <span class="st">&quot;LBp&quot;</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Ljung-Box p-value for AR(p1) model</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>LBp <span class="ot">&lt;-</span> Stats[r, <span class="st">&quot;LBp&quot;</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
@@ -2584,10 +2587,10 @@ Y_t &amp;= -165.095 +0.085 \: \text{Time}_t + \widehat{Z}_t \\
 <p>Since the Ljung-Box <em>p</em>-value for the AICc-selected AR(3) model is not less than 0.05, we can conclude there is no evidence the model is misspecified.</p>
 <p>The estimation of this model is as follows, with the coefficient estimates shown.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>AR3_TB <span class="ot">&lt;-</span> <span class="fu">Arima</span>(Y[ts],</span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>                <span class="at">order =</span> <span class="fu">c</span>(p1, <span class="dv">0</span>, <span class="dv">0</span>),</span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">xreg =</span> X1[ts, ])</span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">round</span>(<span class="fu">coef</span>(AR3_TB), <span class="dv">3</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>AR3_TB <span class="ot">&lt;-</span> <span class="fu">Arima</span>(Y[ts],</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>                <span class="at">order =</span> <span class="fu">c</span>(p1, <span class="dv">0</span>, <span class="dv">0</span>),</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">xreg =</span> X1[ts, ])</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">round</span>(<span class="fu">coef</span>(AR3_TB), <span class="dv">3</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>      ar1       ar2       ar3 intercept      Time      TB_b 
     1.109    -0.237     0.092  -288.206     0.147    -0.125 </code></pre>
@@ -2612,30 +2615,30 @@ Y_t &amp;= -288.206
 <ol start="4" type="1">
 <li><p>The code to carry out the one-step-ahead estimation and forecasts is shown below.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Storage for forecasts from both models</span></span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>AR2_f1 <span class="ot">&lt;-</span> <span class="fu">ts</span>(<span class="at">start =</span> <span class="fu">c</span>(<span class="dv">2000</span>, <span class="dv">1</span>), <span class="at">end =</span> EndForecast, <span class="at">frequency =</span> <span class="dv">12</span>)</span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>AR3_TB_f1 <span class="ot">&lt;-</span> <span class="fu">ts</span>(<span class="at">start =</span> <span class="fu">c</span>(<span class="dv">2000</span>, <span class="dv">1</span>), <span class="at">end =</span> EndForecast, <span class="at">frequency =</span> <span class="dv">12</span>)</span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Increase end of sample one period at a time through forecast period</span></span>
-<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (n <span class="cf">in</span> (tf <span class="sc">-</span> <span class="dv">1</span>)){</span>
-<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Estimation sample</span></span>
-<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>  t <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span>n</span>
-<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>  <span class="co"># AR(2) + Trend : estimation and one-step-ahead forecast</span></span>
-<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>  AR2 <span class="ot">&lt;-</span> <span class="fu">Arima</span>(Y[t],</span>
-<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>               <span class="at">order =</span> <span class="fu">c</span>(p0, <span class="dv">0</span>, <span class="dv">0</span>),</span>
-<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>               <span class="at">xreg =</span> Time[t])</span>
-<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>  AR2_f1[n <span class="sc">+</span> <span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="fu">forecast</span>(AR2, <span class="at">xreg =</span> Time[n <span class="sc">+</span> <span class="dv">1</span>])<span class="sc">$</span>mean</span>
-<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a>  <span class="co"># AR(3) + Trend + Break : estimation and one-step-ahead forecast</span></span>
-<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a>  AR3_TB <span class="ot">&lt;-</span> <span class="fu">Arima</span>(Y[t],</span>
-<span id="cb22-19"><a href="#cb22-19" aria-hidden="true" tabindex="-1"></a>                  <span class="at">order =</span> <span class="fu">c</span>(p1, <span class="dv">0</span>, <span class="dv">0</span>),</span>
-<span id="cb22-20"><a href="#cb22-20" aria-hidden="true" tabindex="-1"></a>                  <span class="at">xreg =</span> X1[t, ])</span>
-<span id="cb22-21"><a href="#cb22-21" aria-hidden="true" tabindex="-1"></a>  AR3_TB_f1[n <span class="sc">+</span> <span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="fu">forecast</span>(AR3_TB,</span>
-<span id="cb22-22"><a href="#cb22-22" aria-hidden="true" tabindex="-1"></a>                               <span class="at">xreg =</span> X1[n <span class="sc">+</span> <span class="dv">1</span>, , <span class="at">drop =</span> <span class="cn">FALSE</span>])<span class="sc">$</span>mean</span>
-<span id="cb22-23"><a href="#cb22-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-24"><a href="#cb22-24" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Storage for forecasts from both models</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>AR2_f1 <span class="ot">&lt;-</span> <span class="fu">ts</span>(<span class="at">start =</span> <span class="fu">c</span>(<span class="dv">2000</span>, <span class="dv">1</span>), <span class="at">end =</span> EndForecast, <span class="at">frequency =</span> <span class="dv">12</span>)</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>AR3_TB_f1 <span class="ot">&lt;-</span> <span class="fu">ts</span>(<span class="at">start =</span> <span class="fu">c</span>(<span class="dv">2000</span>, <span class="dv">1</span>), <span class="at">end =</span> EndForecast, <span class="at">frequency =</span> <span class="dv">12</span>)</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Increase end of sample one period at a time through forecast period</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (n <span class="cf">in</span> (tf <span class="sc">-</span> <span class="dv">1</span>)){</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Estimation sample</span></span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>  t <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span>n</span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>  <span class="co"># AR(2) + Trend : estimation and one-step-ahead forecast</span></span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>  AR2 <span class="ot">&lt;-</span> <span class="fu">Arima</span>(Y[t],</span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>               <span class="at">order =</span> <span class="fu">c</span>(p0, <span class="dv">0</span>, <span class="dv">0</span>),</span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>               <span class="at">xreg =</span> Time[t])</span>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a>  AR2_f1[n <span class="sc">+</span> <span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="fu">forecast</span>(AR2, <span class="at">xreg =</span> Time[n <span class="sc">+</span> <span class="dv">1</span>])<span class="sc">$</span>mean</span>
+<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a>  <span class="co"># AR(3) + Trend + Break : estimation and one-step-ahead forecast</span></span>
+<span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a>  AR3_TB <span class="ot">&lt;-</span> <span class="fu">Arima</span>(Y[t],</span>
+<span id="cb23-19"><a href="#cb23-19" aria-hidden="true" tabindex="-1"></a>                  <span class="at">order =</span> <span class="fu">c</span>(p1, <span class="dv">0</span>, <span class="dv">0</span>),</span>
+<span id="cb23-20"><a href="#cb23-20" aria-hidden="true" tabindex="-1"></a>                  <span class="at">xreg =</span> X1[t, ])</span>
+<span id="cb23-21"><a href="#cb23-21" aria-hidden="true" tabindex="-1"></a>  AR3_TB_f1[n <span class="sc">+</span> <span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="fu">forecast</span>(AR3_TB,</span>
+<span id="cb23-22"><a href="#cb23-22" aria-hidden="true" tabindex="-1"></a>                               <span class="at">xreg =</span> X1[n <span class="sc">+</span> <span class="dv">1</span>, , <span class="at">drop =</span> <span class="cn">FALSE</span>])<span class="sc">$</span>mean</span>
+<span id="cb23-23"><a href="#cb23-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-24"><a href="#cb23-24" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>The forecasts for the two models are tabulated below.</p>
 <div class="cell">
@@ -2657,8 +2660,8 @@ Y_t &amp;= -288.206
 </div>
 <p>The accuracy of these two sets of forecasts are evaluated using Root Mean Square Errors:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>ForecastErrors <span class="ot">&lt;-</span> Y[tf] <span class="sc">-</span> Forecasts</span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>RMSE <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">sqrt</span>(<span class="fu">apply</span>(ForecastErrors<span class="sc">^</span><span class="dv">2</span>, <span class="dv">2</span>, mean)), <span class="dv">4</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>ForecastErrors <span class="ot">&lt;-</span> Y[tf] <span class="sc">-</span> Forecasts</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>RMSE <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">sqrt</span>(<span class="fu">apply</span>(ForecastErrors<span class="sc">^</span><span class="dv">2</span>, <span class="dv">2</span>, mean)), <span class="dv">4</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>There is a very small accuracy advantage for the AR(3) model with trend break included.</p>
 <div class="cell">
