@@ -2385,7 +2385,7 @@ text-align: justify
 </div>
 <hr>
 <ol type="1">
-<li><p>The time series plot of the log gold price is shown below. Evidentally there is a general increasing trend, but this is clearest from 2000 until sometime around 2012. Thereafter the time series drifts without such a clear direction. Instead there are some prolonged periods (over multiple years) where the price drifts upwards or downwards. There is no sign of a seasonal pattern, and one will not be included in the modelling here.</p>
+<li><p>The time series plot of the log gold price is shown below. Evidently there is a general increasing trend, but this is clearest from 2000 until sometime around 2012. Thereafter the time series drifts without such a clear direction. Instead there are some prolonged periods (over multiple years) where the price drifts upwards or downwards. There is no sign of a seasonal pattern, and one will not be included in the modelling here.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(Time[ts], Y[ts], <span class="at">type =</span> <span class="st">&quot;l&quot;</span>, <span class="at">main =</span> <span class="st">&quot;log Gold Price&quot;</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
@@ -2638,7 +2638,8 @@ Y_t &amp;= -288.206
 <span id="cb23-21"><a href="#cb23-21" aria-hidden="true" tabindex="-1"></a>  AR3_TB_f1[n <span class="sc">+</span> <span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="fu">forecast</span>(AR3_TB,</span>
 <span id="cb23-22"><a href="#cb23-22" aria-hidden="true" tabindex="-1"></a>                               <span class="at">xreg =</span> X1[n <span class="sc">+</span> <span class="dv">1</span>, , <span class="at">drop =</span> <span class="cn">FALSE</span>])<span class="sc">$</span>mean</span>
 <span id="cb23-23"><a href="#cb23-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-24"><a href="#cb23-24" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb23-24"><a href="#cb23-24" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb23-25"><a href="#cb23-25" aria-hidden="true" tabindex="-1"></a>Forecasts <span class="ot">&lt;-</span> <span class="fu">cbind</span>(<span class="at">AR2_f1 =</span> AR2_f1[tf], <span class="at">AR3_TB_f1 =</span> AR3_TB_f1[tf])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>The forecasts for the two models are tabulated below.</p>
 <div class="cell">

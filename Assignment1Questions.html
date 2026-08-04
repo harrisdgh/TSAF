@@ -2387,7 +2387,7 @@ text-align: justify
 <li><p>Fit a linear trend model of the form <span class="math display">\[
 Y_t = \beta_0 + \beta_1 \text{Time}_t + Z_t
 \]</span> to the log gold price over the estimation period. Produce a time series plot of the log gold price with the linear trend superimposed. Explain if the linear trend appears visually to be an adequate representation of the variations in the time series.</p></li>
-<li><p>Carry out a model specification search to choose an AR(<em>p</em>) model with linear trend for the log gold price. Present and explain the statistical evidence that led to your choice of model. Write out the estimated model in equation(s) form.</p></li>
+<li><p>Carry out a model specification search to choose an AR(<em>p</em>) model with linear trend for the log gold price, with maximum AR lag length of 12. Present and explain the statistical evidence that led to your choice of model. Write out the estimated model in equation(s) form.</p></li>
 </ol></li>
 <li><p><strong>Model with linear trend and break</strong></p>
 <ol type="a">
@@ -2395,7 +2395,7 @@ Y_t = \beta_0 + \beta_1 \text{Time}_t + Z_t
 Y_t = \beta_0 + \beta_1 \text{Time}_t + \beta_2 \text{TB}_t(b) + Z_t
 \]</span> where <span class="math display">\[
 \text{TB}_t(b) = 1(\text{Time}_t &gt; b) \times (\text{Time}_t - b)
-\]</span> and where <span class="math inline">\(b\)</span> is assumed to fall sometime during 2010,…, 2014 (i.e. <span class="math inline">\(b\)</span> may occur at any month within these five years). Carry out a least squares search for the best choice for <span class="math inline">\(b\)</span>.</p></li>
+\]</span> and where <span class="math inline">\(b\)</span> may occur in any month from January 2010 to December 2014 inclusive. Carry out a least squares search for the best choice for <span class="math inline">\(b\)</span>.</p></li>
 <li><p>Using the value of <span class="math inline">\(b\)</span> selected in (a), estimate the linear trend model with break and produce a time series plot of the log gold price with this trend model superimposed. Explain if the plot suggests this model is an improvement on the one in question 2.</p></li>
 <li><p>Carry out a model specification search to choose an AR(<em>p</em>) model with trend model specified in (b) for the log gold price. Present and explain the statistical evidence that led to your choice of model. Write out the estimated model in equation(s) form.</p></li>
 </ol></li>
