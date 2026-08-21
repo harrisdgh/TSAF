@@ -2322,10 +2322,11 @@ text-align: justify
 <ol type="1">
 <li><p>Review the unit root test results for CPI from Self-directed Activities 5.</p>
 <ol type="a">
-<li>Next create the first difference time series <span class="math inline">\(\Delta Y_t\)</span> and a time series plot. Decide whether a trend is required for a unit root test for <span class="math inline">\(\Delta Y_t\)</span>.</li>
-<li>Carry out the unit root test on <span class="math inline">\(\Delta Y_t\)</span>. Conclude how many differences are required for log CPI to be stationary.</li>
-<li>Specify and estimate an appropriate ARIMA(<span class="math inline">\(p,d,q\)</span>) model for <span class="math inline">\(Y_t\)</span>.</li>
-<li>Use the chosen model to calculate a forecast of inflation and the CPI for the March quarter of 2020.</li>
+<li><p>Next create the first difference time series <span class="math inline">\(\Delta Y_t\)</span>, which is the inflation rate. Create a time series plot and decide whether a trend is required for a unit root test for <span class="math inline">\(\Delta Y_t\)</span>.</p></li>
+<li><p>Carry out the unit root test on <span class="math inline">\(\Delta Y_t\)</span>. Conclude how many differences are required for log CPI to be stationary.</p></li>
+<li><p>Specify and estimate an appropriate ARIMA(<span class="math inline">\(p,d,q\)</span>) model for <span class="math inline">\(Y_t\)</span>. Model the linear trend using the observation indices <span class="math inline">\(t = 1,2,\ldots,n\)</span>. Combining a difference and a linear trend in the model requires some careful interpretation — write out the model in equation form and interpret the coefficients.</p></li>
+<li><p>In previous applications we have modelled the linear trend using the observation <em>dates</em> <span class="math inline">\(\text{Time}_t\)</span>. Set up the same ARIMA(<span class="math inline">\(p,d,q\)</span>) model for <span class="math inline">\(Y_t\)</span> as (c), but use the observation dates instead. Show how this is equivalent to using obesrvation indices for the trend.</p></li>
+<li><p>Use the chosen model to calculate a forecast of inflation, log CPI and the CPI itself for the March quarter of 2020.</p></li>
 </ol></li>
 <li><p>Consider a time series model consisting of a trend equation and AR(<em>p</em>) equation: <span class="math display">\[
 \begin{aligned}

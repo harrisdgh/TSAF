@@ -2408,35 +2408,46 @@ text-align: justify
 <div class="cell-output cell-output-stdout">
 <pre><code>Since p_adf = 0.0000 &lt; 0.05, H0:unit root is rejected.</code></pre>
 </div>
-</div></li>
+</div>
+<p>The conclusion is that this inflation time series can be treated as stationary, i.e. a single difference of log CPI should be taken.</p></li>
 <li><p>Code for model search:</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(forecast)</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>pmax <span class="ot">&lt;-</span> <span class="dv">4</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>qmax <span class="ot">&lt;-</span> <span class="dv">4</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>LBp <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="at">nrow=</span>pmax<span class="sc">+</span><span class="dv">1</span>, <span class="at">ncol=</span>qmax<span class="sc">+</span><span class="dv">1</span>)</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(LBp) <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">&quot;p=&quot;</span>, <span class="dv">0</span><span class="sc">:</span>pmax)</span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(LBp) <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">&quot;q=&quot;</span>, <span class="dv">0</span><span class="sc">:</span>qmax)</span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>AICc <span class="ot">&lt;-</span> LBp</span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (p <span class="cf">in</span> <span class="dv">0</span><span class="sc">:</span>pmax){</span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (q <span class="cf">in</span> <span class="dv">0</span><span class="sc">:</span>qmax){</span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>    eq <span class="ot">&lt;-</span> <span class="fu">Arima</span>(DY, <span class="at">order=</span><span class="fu">c</span>(p,<span class="dv">0</span>,q))</span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">capture.output</span>(LBp[p<span class="sc">+</span><span class="dv">1</span>,q<span class="sc">+</span><span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="fu">checkresiduals</span>(eq,</span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>      <span class="at">plot=</span><span class="cn">FALSE</span>)<span class="sc">$</span>p.value)</span>
-<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>    AICc[p<span class="sc">+</span><span class="dv">1</span>,q<span class="sc">+</span><span class="dv">1</span>] <span class="ot">&lt;-</span> eq<span class="sc">$</span>aicc</span>
-<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>  }  </span>
-<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>pmax <span class="ot">&lt;-</span> <span class="dv">4</span>   <span class="co"># Max AR lag order</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>qmax <span class="ot">&lt;-</span> <span class="dv">4</span>   <span class="co"># Max MA lag order</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Storage for Ljung-Box p-values and AICc</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>LBp <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="at">nrow=</span>pmax<span class="sc">+</span><span class="dv">1</span>, <span class="at">ncol=</span>qmax<span class="sc">+</span><span class="dv">1</span>)</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(LBp) <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">&quot;p=&quot;</span>, <span class="dv">0</span><span class="sc">:</span>pmax)</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(LBp) <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">&quot;q=&quot;</span>, <span class="dv">0</span><span class="sc">:</span>qmax)</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>AICc <span class="ot">&lt;-</span> LBp</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (p <span class="cf">in</span> <span class="dv">0</span><span class="sc">:</span>pmax){</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (q <span class="cf">in</span> <span class="dv">0</span><span class="sc">:</span>qmax){</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>    eq <span class="ot">&lt;-</span> <span class="fu">Arima</span>(DY, <span class="at">order=</span><span class="fu">c</span>(p, <span class="dv">0</span>, q))</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>    LBp[p<span class="sc">+</span><span class="dv">1</span>, q<span class="sc">+</span><span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="fu">Box.test</span>(eq<span class="sc">$</span>residuals,</span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>                              <span class="at">lag =</span> <span class="dv">8</span>,</span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>                              <span class="at">type =</span> <span class="st">&quot;Ljung-Box&quot;</span>,</span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>                              <span class="at">fitdf =</span> p <span class="sc">+</span> q)<span class="sc">$</span>p.value</span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>    AICc[p<span class="sc">+</span><span class="dv">1</span>, q<span class="sc">+</span><span class="dv">1</span>] <span class="ot">&lt;-</span> eq<span class="sc">$</span>aicc</span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>  }  </span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Residual autocorrelation significant:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="dv">1</span><span class="sc">*</span>(LBp<span class="sc">&lt;</span><span class="fl">0.05</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(LBp<span class="sc">&lt;</span><span class="fl">0.05</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>    q=0 q=1 q=2 q=3 q=4
-p=0   1   1   1   1   1
-p=1   1   1   0   0   0
-p=2   1   1   0   0   0
-p=3   1   1   0   0   0
-p=4   1   1   0   0   0</code></pre>
+<pre><code>     q=0  q=1   q=2   q=3   q=4
+p=0 TRUE TRUE  TRUE  TRUE  TRUE
+p=1 TRUE TRUE FALSE FALSE FALSE
+p=2 TRUE TRUE FALSE FALSE FALSE
+p=3 TRUE TRUE FALSE FALSE FALSE
+p=4 TRUE TRUE  TRUE FALSE  TRUE</code></pre>
 </div>
 </div>
 <p>Model to minimise AICc:</p>
@@ -2451,111 +2462,206 @@ p=3 FALSE FALSE FALSE FALSE FALSE
 p=4 FALSE FALSE FALSE FALSE FALSE</code></pre>
 </div>
 </div>
-<p>The chosen model is ARMA(1,3) for <span class="math inline">\(\Delta Y_t\)</span>, or ARIMA(1,1,3) for <span class="math inline">\(Y_t\)</span>.</p></li>
-<li><p>Firstly here is the one-step-ahead forecast for inflation, which is <code>DY</code>, i.e. <span class="math inline">\(\Delta \log \text{CPI}_t\)</span>.</p>
+<p>The chosen model is ARMA(1, 3) for <span class="math inline">\(\Delta Y_t\)</span>, equivalently ARIMA(1, 1, 3) for <span class="math inline">\(Y_t\)</span>.</p>
+<hr>
+<p>Here are some equivalent ways to estimate the model. In symbols, in terms of <span class="math inline">\(Y_t\)</span> (the original log CPI time series, with linear trend), this model is: <span class="math display">\[
+\begin{aligned}
+Y_t &amp;= \beta_0 + \beta_1 t + Z_t \\
+\Delta Z_t &amp;= \phi_1 \Delta Z_{t-1}
++ U_t + \theta_1 U_{t-1} + \theta_2 U_{t-2} + \theta_3 U_{t-3}
+\end{aligned}
+\]</span> The equation for <span class="math inline">\(Z_t\)</span> shows the ARIMA(1, 1, 3) structure, and the equation for <span class="math inline">\(Y_t\)</span> includes the linear trend. The linear trend in this case is being modelled in terms of the observation index <span class="math inline">\(t\)</span>, i.e. <span class="math inline">\(t=1,2,3,\ldots\)</span> (as opposed to <span class="math inline">\(\text{Time}_t\)</span> that we have used before). The implication is that <span class="math inline">\(\beta_1\)</span> measures the mean increase in <span class="math inline">\(Y_t\)</span> <em>per time period</em>, i.e. <em>per quarter</em>.</p>
+<p>Taking a first difference of the trend equation gives <span class="math display">\[
+\begin{aligned}
+\Delta Y_t &amp;= \beta_1 t + \Delta Z_t \\
+\Delta Z_t &amp;= \phi_1 \Delta Z_{t-1}
++ U_t + \theta_1 U_{t-1} + \theta_2 U_{t-2} + \theta_3 U_{t-3}
+\end{aligned}
+\]</span> which is using <span class="math inline">\(\Delta t = t - (t-1) = 1\)</span>. That is, we may represent this model in terms of <span class="math inline">\(Y_t\)</span> or <span class="math inline">\(\Delta Y_t\)</span>, according to convenience. (As a technical aside, notice that <span class="math inline">\(\beta_0\)</span> disappears in this representation. The implication is that <span class="math inline">\(\beta_0\)</span>, the intercept for <span class="math inline">\(Y_t\)</span>, is <em>not identified</em> when a difference is taken, so we will not be seeing estimates of <span class="math inline">\(\beta_0\)</span> appearing below.)</p>
+<hr>
+<p>To estimate the ARIMA(1, 0, 3) model for <span class="math inline">\(\Delta Y_t\)</span>, with that difference already being taken in computing <code>DY</code> :</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>eq <span class="ot">&lt;-</span> <span class="fu">Arima</span>(DY, <span class="at">order=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">3</span>))</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>ForecastInflation_2020q1 <span class="ot">&lt;-</span> <span class="fu">forecast</span>(eq, <span class="at">h=</span><span class="dv">1</span>)<span class="sc">$</span>mean</span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(ForecastInflation_2020q1)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>eq_a <span class="ot">&lt;-</span> <span class="fu">Arima</span>(DY, <span class="at">order =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">3</span>))</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">round</span>(eq_a<span class="sc">$</span>coef, <span class="dv">4</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>           Qtr1
-2020 0.00710347</code></pre>
+<pre><code>      ar1       ma1       ma2       ma3 intercept 
+   0.8316   -0.6377    0.2380    0.1276    0.0120 </code></pre>
 </div>
 </div>
+<p>In equation form, this estimated model can be written: <span class="math display">\[
+\begin{aligned}
+\Delta Y_t &amp;= 0.0120 + \widehat{\Delta Z}_t \\
+\widehat{\Delta Z}_t &amp;=
+  0.8316 \widehat{\Delta Z}_{t-1}
+  + \widehat{U}_t
+  -0.6377 \: \widehat{U}_{t-1}
+  +0.2380 \: \widehat{U}_{t-2}
+  +0.1276 \: \widehat{U}_{t-3}.
+\end{aligned}
+\]</span> The intercept of the model, <span class="math inline">\(\widehat{\beta}_1 = 0.0120\)</span>, implies the estimated mean rate of inflation is 0.0120, or 1.2%, per quarter (this is a quarterly time series).</p>
+<p>The same model may be estimated as an ARIMA(1, 1, 3) model for <span class="math inline">\(Y_t\)</span>:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>eq_b <span class="ot">&lt;-</span> <span class="fu">Arima</span>(Y, <span class="at">order =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">3</span>), <span class="at">include.drift =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Note the <code>include.drift = TRUE</code> option, which is necessary for the inclusion of <span class="math inline">\(\beta_1\)</span> (called “drift” in this context where the intercept captures the linear trend) when the differencing is included in the model in this way, rather than taking the difference beforehand as we did in the first model for <code>DY</code>. The two approaches are equivalent for estimation, as can be seen from these coefficient estimates:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">round</span>(eq_b<span class="sc">$</span>coef, <span class="dv">4</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    ar1     ma1     ma2     ma3   drift 
+ 0.8316 -0.6377  0.2380  0.1276  0.0120 </code></pre>
+</div>
+</div>
+<p>There is a difference between the two when it comes to forecasting — the first is a model for <code>DY</code> and hence will generate forecasts for <span class="math inline">\(\Delta Y_t\)</span> (inflation), while the second is model for <code>Y</code> and hence will generate forecasts for <span class="math inline">\(Y_t\)</span> (log CPI). This is demonstrated in part (e). Neither is necessarily better / worse, it just depends on the intended purpose.</p></li>
+<li><p>Before proceding to forecasting, recall that in earlier applications we have used <span class="math inline">\(\text{Time}_t\)</span> (the observation <em>date</em>) to model the linear trend, rather than <span class="math inline">\(t\)</span> (the observation <em>index</em>). These are mathematically equivalent in the sense that they both increase linearly, they differ only in scaling and relative convenience. Using the observation index is the default in time series model estimation commands and is therefore convenient and most commonly used. Using the observation date can be convenient for interpretation (i.e. if you are asked to find an estimate of the trend for the June quarter 2022, simply use <span class="math inline">\(\text{Time}_t = 2022.25\)</span>, while the value of <span class="math inline">\(t\)</span> corresponding to the June quarter 2022 would need to be worked out depending on the observed sample), and also convenient for defining other variables like structural breaks (eg. to define a Covid structural break we could use break <em>date</em> <span class="math inline">\(b = 2020\)</span>, but to express this in terms of observation index again requires an extra step to find which observation index corrresponds to 2020). The difference between using observation date and observation index should not be overstated — they are equivalent and most often the index is used by default.</p>
+<p>Examining these differences is a way to help understand the way in which these models work, and the different ways in which we might measure <em>time</em> in <em>time</em> series analysis.</p>
+<p>In terms of the observation <em>date</em>, consider the model representation <span class="math display">\[
+\begin{aligned}
+Y_t &amp;= \beta_0^* + \beta_1^* \text{Time}_t + Z_t \\
+\Delta Z_t &amp;= \phi_1 \Delta Z_{t-1}
++ U_t + \theta_1 U_{t-1} + \theta_2 U_{t-2} + \theta_3 U_{t-3}
+\end{aligned}
+\]</span> The connection between the observation index and observation date can be shown as follows:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Sample size</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">length</span>(Y)</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Observation indices</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>t <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span>n</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Observation dates</span></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>Time <span class="ot">&lt;-</span> <span class="fu">time</span>(Y)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Here are the first and last few observation indices and dates:</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>        t    Time
+1946 Q1 1 1946.00
+1946 Q2 2 1946.25
+1946 Q3 3 1946.50
+1946 Q4 4 1946.75
+1947 Q1 5 1947.00
+1947 Q2 6 1947.25</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>          t    Time
+2018 Q3 291 2018.50
+2018 Q4 292 2018.75
+2019 Q1 293 2019.00
+2019 Q2 294 2019.25
+2019 Q3 295 2019.50
+2019 Q4 296 2019.75</code></pre>
+</div>
+</div>
+<p>In the trend model with observation <em>indices</em>: <span class="math display">\[
+Y_t = \beta_0 + \beta_1 t + Z_t
+\]</span> the interpretation of <span class="math inline">\(\beta_1\)</span> is the change in mean of <span class="math inline">\(Y_t\)</span> when <span class="math inline">\(t\)</span> increases by one (i.e. when time advances by one period, one quarter in this case.). In the trend model with observation <em>dates</em>: <span class="math display">\[
+Y_t = \beta_0^* + \beta_1^* \text{Time}_t + Z_t
+\]</span> the interpretation of <span class="math inline">\(\beta_1^*\)</span> is the change in mean of <span class="math inline">\(Y_t\)</span> when <span class="math inline">\(\text{Time}_t\)</span> increases by one (i.e. one <em>year</em> in this case). The implication is that <span class="math inline">\(\beta_1^* = 4 \beta_1\)</span> with quarterly data.</p>
+<p>We generally wouldn’t need to go through this, but to show formally the relationship between the two models we start with <span class="math display">\[
+\text{Time}_t = 1945.75 + 0.25 \: t
+\]</span> (for this particular application and sample), so that <span class="math display">\[
+\begin{aligned}
+Y_t &amp;= \beta_0^* + \beta_1^* \: \text{Time}_t + Z_t \\
+&amp;= \beta_0^* + \beta_1^* \: (1945.75 + 0.25 \: t) + Z_t \\
+&amp;= (\beta_0^* + \beta_1^* \times 1945.75) + (\beta_1^* \times 0.25) \, t + Z_t.
+\end{aligned}
+\]</span> Comparison with the trend model in terms of the observation indices shows that <span class="math display">\[
+\beta_0 = \beta_0^* + \beta_1^* \times 1945.75, \quad
+\beta_1 = \beta_1^* \times 0.25,
+\]</span> the latter relationship between <span class="math inline">\(\beta_1\)</span> and <span class="math inline">\(\beta_1^*\)</span> being consistent with <span class="math inline">\(\beta_1^* = 4 \beta_1\)</span> shown above.</p>
+<hr>
+<p>Here is how to estimate the ARIMA(1, 1, 3) model for <span class="math inline">\(Y_t\)</span> using <span class="math inline">\(\text{Time}_t\)</span> for the trend:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>eq_c <span class="ot">&lt;-</span> <span class="fu">Arima</span>(Y, <span class="at">order =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">3</span>), <span class="at">include.drift =</span> <span class="cn">FALSE</span>, <span class="at">xreg =</span> Time)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>The <code>xreg = Time</code> option includes <span class="math inline">\(\text{Time}_t\)</span>, which plays the role of the drift / linear trend, so <code>include.drift = FALSE</code> is added (<code>FALSE</code> is actually the default, but this is included here to emphasise the point). The coefficient estimates are shown here:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">round</span>(eq_c<span class="sc">$</span>coef, <span class="dv">4</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    ar1     ma1     ma2     ma3    xreg 
+ 0.8317 -0.6377  0.2379  0.1275  0.0478 </code></pre>
+</div>
+</div>
+<p>Note that the AR and MA coefficient estimates are the same as those above, as expected. The <code>xreg</code> coefficient is the coefficient on <code>Time</code>. In equation form the estimated trend equation (in first differences) would be written <span class="math display">\[
+\Delta Y_t = 0.0478 \: \Delta \text{Time}_t + \widehat{\Delta Z_t}.
+\]</span> Noting that <span class="math inline">\(\Delta \text{Time}_t = 0.25\)</span> (for quarterly data), this becomes <span class="math display">\[
+\Delta Y_t = 0.0120 + \widehat{\Delta Z_t},
+\]</span> matching the estimate above.</p>
+<p>The point of all of this is to show that we may model the linear trend in terms of observation date or observation index, according to which is more convenient, and the resulting model will be equivalent either way.</p></li>
+<li><p>Firstly here is the one-step-ahead forecast for inflation, which is <code>DY</code>, i.e. <span class="math inline">\(\Delta \log \text{CPI}_t\)</span>, from the model directly for <code>DY</code>:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>Forecast_Inflation_2020q1 <span class="ot">&lt;-</span> <span class="fu">forecast</span>(eq_a, <span class="at">h =</span> <span class="dv">1</span>)<span class="sc">$</span>mean</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">round</span>(Forecast_Inflation_2020q1, <span class="dv">4</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       Qtr1
+2020 0.0071</code></pre>
+</div>
+</div>
+<p>This is the forecast for <span class="math inline">\(\Delta Y_{n+1}\)</span>. To calculate the forecast for <span class="math inline">\(Y_{n+1}\)</span> (which is <span class="math inline">\(\log \text{CPI}_{n+1}\)</span>), we could use the identity <span class="math display">\[
+Y_{n+1} = Y_{n} + \Delta Y_{n+1}.
+\]</span> On both sides take <span class="math inline">\(\widehat{E}(\, \cdot \: | \: {\mathscr{Y}}_{n} \, )\)</span> (i.e. the forecast based on data up to the end of the sample, <span class="math inline">\(t=n\)</span>): <span class="math display">\[
+\widehat{E}(\, Y_{n+1} \: | \: {\mathscr{Y}}_{n} \, )
+= Y_{n} + \widehat{E}( \, \Delta Y_{n+1} \: | \: {\mathscr{Y}}_{n} \, ),
+\]</span> noting that <span class="math inline">\(\widehat{E}(\, Y_{n} \: | \: {\mathscr{Y}}_{n} \, ) = Y_n\)</span> because <span class="math inline">\(Y_n\)</span> is included in <span class="math inline">\({\mathscr{Y}}_{n}\)</span>. We have computed <span class="math display">\[
+\widehat{E}( \, \Delta Y_{n+1} \: | \: {\mathscr{Y}}_{n} \, ) =
+  0.0071,
+\]</span> and the last value in the sample is <span class="math display">\[
+Y_n = \texttt{Y[n]} = 4.7553128.
+\]</span> Thus <span class="math display">\[
+\widehat{E}(\, Y_{n+1} \: | \: {\mathscr{Y}}_{n} \, )
+= 4.7553128 + 0.0071
+= 4.7624.
+\]</span> Note this is the forecast for <span class="math inline">\(\log \text{CPI}_{n+1}\)</span>.</p>
+<hr>
+<p>As an alternative, if we were only concerned with forecasting <span class="math inline">\(\log \text{CPI}_{n+1}\)</span> and not the inflation rate, we could use the model for <code>Y</code>. This directly forecasts <code>Y</code>, rather than forecasting <code>DY</code> and then computing the forecast for <code>Y</code> from that.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>Forecast_logCPI_2020q1 <span class="ot">&lt;-</span> <span class="fu">forecast</span>(eq_b, <span class="at">h =</span> <span class="dv">1</span>)<span class="sc">$</span>mean</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">round</span>(Forecast_logCPI_2020q1, <span class="dv">4</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       Qtr1
+2020 4.7624</code></pre>
+</div>
+</div>
+<hr>
+<p>As another alternative, we can compute the same forecast for <span class="math inline">\(\log \text{CPI}_{n+1}\)</span> from the model using observation dates <span class="math inline">\(\text{Time}_t\)</span> for the linear trend. In that it is necessary to specify the value for the trend variable that applied for the one-step-ahead forecast, i.e. 2020.00 corresponding to 2000q1.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>Forecast_logCPI_2020q1_c <span class="ot">&lt;-</span> <span class="fu">forecast</span>(eq_c, <span class="at">xreg =</span> <span class="fl">2020.00</span>)<span class="sc">$</span>mean</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">round</span>(Forecast_logCPI_2020q1_c, <span class="dv">4</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       Qtr1
+2020 4.7624</code></pre>
+</div>
+</div>
+<hr>
 <p>Now let’s calculate the forecast for the CPI. A simple way is to apply the inflation forecast for 2020q1 to the observed value of the CPI for 2019q4:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a ts of CPI (i.e. not log CPI)</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>CPI <span class="ot">&lt;-</span> <span class="fu">ts</span>(dt<span class="sc">$</span>CPI, <span class="at">start=</span><span class="fu">c</span>(<span class="dv">1922</span>,<span class="dv">2</span>), <span class="at">end=</span><span class="fu">c</span>(<span class="dv">2025</span>,<span class="dv">2</span>), <span class="at">frequency=</span><span class="dv">4</span>)</span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="co"># CPI in 2019q4, last date of the estimation sample</span></span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>CPI_2019q4 <span class="ot">&lt;-</span> CPI[<span class="fu">which</span>(<span class="fu">time</span>(CPI)<span class="sc">==</span><span class="fl">2019.75</span>)]</span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Forecast CPI for 2020q1 is CPI in 2019q4 increased by </span></span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="co"># forecast inflation for 2020q1</span></span>
-<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>ForecastCPI_2020q1 <span class="ot">&lt;-</span> CPI_2019q4<span class="sc">*</span>(<span class="dv">1</span><span class="sc">+</span>ForecastInflation_2020q1)</span>
-<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(ForecastCPI_2020q1)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a ts of CPI (i.e. not log CPI)</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>CPI <span class="ot">&lt;-</span> <span class="fu">ts</span>(dt<span class="sc">$</span>CPI, <span class="at">start=</span><span class="fu">c</span>(<span class="dv">1922</span>,<span class="dv">2</span>), <span class="at">end=</span><span class="fu">c</span>(<span class="dv">2025</span>,<span class="dv">2</span>), <span class="at">frequency=</span><span class="dv">4</span>)</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a><span class="co"># CPI in 2019q4, last date of the estimation sample</span></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>CPI_2019q4 <span class="ot">&lt;-</span> CPI[<span class="fu">which</span>(<span class="fu">time</span>(CPI)<span class="sc">==</span><span class="fl">2019.75</span>)]</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Forecast CPI for 2020q1 is CPI in 2019q4 increased by </span></span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a><span class="co"># forecast inflation for 2020q1</span></span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>Forecast_CPI_2020q1_a <span class="ot">&lt;-</span> CPI_2019q4<span class="sc">*</span>(<span class="dv">1</span><span class="sc">+</span>Forecast_Inflation_2020q1)</span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(Forecast_CPI_2020q1_a)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>         Qtr1
 2020 117.0254</code></pre>
 </div>
 </div>
-<p>A different way which will give a very similar answer is to add the forecast for <span class="math inline">\(\Delta Y_{n+1}\)</span> to the actual value for <span class="math inline">\(Y_n\)</span> to produce a forecast for <span class="math inline">\(Y_{n+1}\)</span>. Noting that <span class="math inline">\(Y_{n+1}=\log\text{CPI}_{n+1}\)</span>, we can take the <em>exponential</em> of the forecast for <span class="math inline">\(Y_{n+1}\)</span> to be the forecast for <span class="math inline">\(\text{CPI}_{n+1}\)</span>.</p>
+<p>Another approach that will give a very similar answer is to use the forecast of <span class="math inline">\(\log \text{CPI}_{n+1}\)</span> and take the exponential to “reverse” the log transformation:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">length</span>(Y)</span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>ForecastY_2020q1 <span class="ot">&lt;-</span> Y[n]<span class="sc">+</span>ForecastInflation_2020q1</span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(ForecastY_2020q1)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>         Qtr1
-2020 4.762416</code></pre>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>ForecastCPI_2020q1 <span class="ot">&lt;-</span> <span class="fu">exp</span>(ForecastY_2020q1)</span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(ForecastCPI_2020q1)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>Forecast_CPI_2020q1_b <span class="ot">&lt;-</span> <span class="fu">exp</span>(Forecast_logCPI_2020q1)</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(Forecast_CPI_2020q1_b)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>         Qtr1
 2020 117.0284</code></pre>
 </div>
 </div>
-<p>Note this differs in the third decimal place to the previous approach. Neither is literally “correct”: both are approximations that, for practical purposes, are essentially equivalent.</p>
-<p>Another approach that directly models <code>Y</code> is to specify the model</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>eq1 <span class="ot">&lt;-</span> <span class="fu">Arima</span>(Y, <span class="at">order=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">3</span>), <span class="at">xreg=</span>(<span class="dv">1</span><span class="sc">:</span>n))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<p>This model is <span class="math display">\[
-\begin{align}
-Y_t &amp;= \beta_1 t + Z_t \\
-\Delta Z_t &amp;= \phi_1 \Delta Z_{t-1}
-+ U_t + \theta_1 U_{t-1}
-+ \theta_2 U_{t-2} + \theta_3 U_{t-3}
-\end{align}
-\]</span> The linear trend in <span class="math inline">\(Y_t\)</span> is captured by the <code>xreg=(1:n)</code> option in the estimation, which produces a linear trend variable of the form <code>(1,2,...,n)</code>. Previously we have used <code>time(Y)</code> as the trend variable, and we could do that here as well, but <code>(1:n)</code> is used here to allow direct comparison of coefficient estimates between <code>eq</code> and <code>eq1</code>. The model corresponding to <code>eq</code> above can be expressed <span class="math display">\[
-\begin{align}
-\Delta Y_t &amp;= \beta_1 + \Delta Z_t \\
-\Delta Z_t &amp;= \phi_1 \Delta Z_{t-1} + U_t + \theta_1 U_{t-1}
-+ \theta_2 U_{t-2} + \theta_3 U_{t-3}
-\end{align}
-\]</span> i.e. it is essentially the same other than in <code>eq</code> we use the first difference series <code>DY</code> directly with an ARIMA(1,0,3) specification, while in <code>eq1</code> we model <code>Y</code> and specify the required difference with the <span class="math inline">\({\color{magenta}{d=1}}\)</span> component of the ARIMA(1,<span style="color:magenta;">1</span>,3) specification. These are two versions of the same model and give equivalent coefficient estimates:</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(eq)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Series: DY 
-ARIMA(1,0,3) with non-zero mean 
-
-Coefficients:
-         ar1      ma1     ma2     ma3    mean
-      0.8316  -0.6377  0.2380  0.1276  0.0120
-s.e.  0.0501   0.0701  0.0629  0.0679  0.0022
-
-sigma^2 = 8.244e-05:  log likelihood = 970.4
-AIC=-1928.81   AICc=-1928.52   BIC=-1906.69</code></pre>
-</div>
-</div>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(eq1)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Series: Y 
-Regression with ARIMA(1,1,3) errors 
-
-Coefficients:
-         ar1      ma1     ma2     ma3    xreg
-      0.8316  -0.6377  0.2380  0.1276  0.0120
-s.e.  0.0501   0.0701  0.0629  0.0679  0.0022
-
-sigma^2 = 8.245e-05:  log likelihood = 970.4
-AIC=-1928.81   AICc=-1928.52   BIC=-1906.69</code></pre>
-</div>
-</div>
-<p>The forecast for <code>Y</code> from <code>eq1</code> is</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>ForecastY_2020q1 <span class="ot">&lt;-</span> <span class="fu">forecast</span>(eq1, <span class="at">xreg=</span>(n<span class="sc">+</span><span class="dv">1</span>))<span class="sc">$</span>mean</span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(ForecastY_2020q1)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>         Qtr1
-2020 4.762416</code></pre>
-</div>
-</div>
-<p>which is the same as the second forecast above.</p>
-<p>Obvious question : should we use <code>eq</code> or <code>eq1</code>? Since they are equivalent representations of the same model it doesn’t matter. In a case such as this where inflation is likely the quantity of most interest it may be convenient to use the <code>eq</code> form in terms of <code>DY</code> and then deduce CPI forecasts from there. If the only interest were in the level variable <code>Y</code> then the <code>eq1</code> form in terms of <code>Y</code> may be more convenient. Ultimately either is fine.</p>
-<p>Note the step where we first calculate the forecast for <span class="math inline">\(Y_{n+1}=\log\text{CPI}_{n+1}\)</span> and then take the exponential to convert this into a forecast for <span class="math inline">\(\text{CPI}_{n+1}\)</span>. This is very common practice and superficially seems watertight, but it turns out the resulting forecast is not a conditional expectation. In particular we have the forecast for <span class="math inline">\(Y_{n+1}\)</span> being <span class="math display">\[
+<p>Note this differs in the third decimal place to the previous approach. Neither is literally “correct”: both are approximations that, for practical purposes, are essentially equivalent (at least when inflation rates are not too high).</p>
+<hr>
+<p><em>Digression</em>. Consider the step where we first calculate the forecast for <span class="math inline">\(Y_{n+1}=\log\text{CPI}_{n+1}\)</span> and then take the exponential to convert this into a forecast for <span class="math inline">\(\text{CPI}_{n+1}\)</span>. This is very common practice and superficially seems watertight, but it turns out the resulting forecast is not a conditional expectation. In particular we have the forecast for <span class="math inline">\(Y_{n+1}\)</span> being <span class="math display">\[
 E(Y_{n+1}|{\mathscr{Y}}_{n})
 = E(\log \text{CPI}_{n+1}|{\mathscr{Y}}_{n})
 \]</span> Taking the exponential: <span class="math display">\[
@@ -2566,7 +2672,8 @@ E(Y_{n+1}|{\mathscr{Y}}_{n})
 E(\exp \log \text{CPI}_{n+1}|{\mathscr{Y}}_{n}) \\
 &amp;= E(\text{CPI}_{n+1}|{\mathscr{Y}}_{n})
 \end{align}
-\]</span> The <span class="math inline">\({\color{red}{\neq}}\)</span> step occurs because the nonlinear <span class="math inline">\(\exp(.)\)</span> operation does not pass through the linear expectation operation. If we have (an estimate of) the conditional expectation of <span class="math inline">\(\log\text{CPI}_{n+1}\)</span> we do not strictly speaking obtain the conditional expectation of <span class="math inline">\(\text{CPI}_{n+1}\)</span> by taking the exponential. To find <span class="math inline">\(E(\text{CPI}_{n+1}|{\mathscr{Y}}_{n})\)</span> from <span class="math inline">\(E(\log \text{CPI}_{n+1}|{\mathscr{Y}}_{n})\)</span> would require a more complicated calculation that would involve assumptions and/or estimates of the entire distribution of the CPI variable, not just the conditional mean. Luckily, in practice simply taking the exponential tends to work well in providing a good approximation. In fact <a href="https://www.sciencedirect.com/science/article/abs/pii/S0169207011000112">research suggests</a> it tends to work better in practice than the theoretically correct formula. So we will continue to take exponentials whenever required.</p></li>
+\]</span> The <span class="math inline">\({\color{red}{\neq}}\)</span> step occurs because the nonlinear <span class="math inline">\(\exp(.)\)</span> operation does not pass through the linear expectation operation. If we have (an estimate of) the conditional expectation of <span class="math inline">\(\log\text{CPI}_{n+1}\)</span> we do not strictly speaking obtain the conditional expectation of <span class="math inline">\(\text{CPI}_{n+1}\)</span> by taking the exponential. To find <span class="math inline">\(E(\text{CPI}_{n+1}|{\mathscr{Y}}_{n})\)</span> from <span class="math inline">\(E(\log \text{CPI}_{n+1}|{\mathscr{Y}}_{n})\)</span> would require a more complicated calculation that would involve assumptions and/or estimates of the entire distribution of the CPI variable, not just the conditional mean. Luckily, in practice simply taking the exponential tends to work well in providing a good approximation. In fact <a href="https://www.sciencedirect.com/science/article/abs/pii/S0169207011000112">research suggests</a> it tends to work better in practice than the theoretically correct formula. So we will continue to take exponentials whenever required.</p>
+<hr></li>
 </ol></li>
 <li><p>Start with the autoregressive equation and re-arrange as follows: <span class="math display">\[
 \begin{aligned}
